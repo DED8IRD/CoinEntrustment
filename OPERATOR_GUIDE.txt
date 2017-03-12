@@ -1,0 +1,11 @@
+README for CE Game operators.
+
+This is the script for the operator of the Coin Entrustment game. 
+As operator, you will embody a 3d avatar agent named Rovy. You will "play" a game with the participant as the avatar through a video call.
+
+The researcher should have the game up and ready for you. If that is not the case, open cmd.exe and do the following:
+
+	cd C:/Users/Rory/Documents/HRI Research Project/CE Game
+	python CEGame.py
+
+To "play" the command-line game, simply follow the prompts and play the recordings specified. You will enter participant inputs and the game will calculate your next moves. All you have to do is play the right recordings.

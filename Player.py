@@ -34,7 +34,7 @@ class Player:
     def defect(self, player):
         self.coins.append(0)
         player.coins.append(0)
-        self.coop.append(-1)
+        self.coop.append(0)
 
     def get_trust_score(self, rounds):
         return sum(self.trust)/rounds

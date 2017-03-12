@@ -8,13 +8,14 @@ Created by Eunika Wu on 28 Feb, 2017.
 from __future__ import division
 from Player import Player
 from math import ceil
+import os
 
 PARTICIPANT = None
 TRUST_SCORE = 0
 COOPERATION_SCORE = 0
 OPPONENT_SCORE = 0
 AGENT_SCORE = 0
-NUM_ROUNDS = 5
+NUM_ROUNDS = 7
 
 def get_subject_entrustment():
     while True:
@@ -39,9 +40,15 @@ def get_subject_cooperation():
             print("Invalid. Answer (y/n)")
 
 def print_scores():
+    if OPPONENT_SCORE > AGENT_SCORE:
+        winner = 'SUBJECT ' + PARTICIPANT
+    elif OPPONENT_SCORE == AGENT_SCORE:
+        winner = 'BOTH OF YOU: IT\'S A TIE'
+    else:
+        winner = 'AGENT ROVY'
+
     out = ('-'*80
-          + '\n\tTHE WINNER IS THE ' 
-          + ('SUBJECT ' + PARTICIPANT if OPPONENT_SCORE > AGENT_SCORE else 'AGENT') 
+          + '\n\tTHE WINNER IS ' + winner
           + '\n' + '-'*80 + '\n'
           + '\n\t\tSUBJECT SCORE: ' + str(OPPONENT_SCORE)
           + '\n\t\tAGENT SCORE: ' + str(AGENT_SCORE)
@@ -49,7 +56,8 @@ def print_scores():
           + '\n\t\tSUBJECT COOPERATION SCORE: ' + str(COOPERATION_SCORE) +'\n'
           )
 
-    with open(PARTICIPANT +'.score', 'w') as outfile:
+    scoredest = os.path.join(os.getcwd(), 'Scores', PARTICIPANT + '.score')
+    with open(scoredest, 'w') as outfile:
         outfile.write(out)
         outfile.write('\n')
         outfile.write('Agent\n')
@@ -72,7 +80,7 @@ if __name__ == '__main__':
     print('\tThis is the Coin Entrustment Game.')
     print('-'*80)
 
-    PARTICIPANT = raw_input("\tEnter participant: ")
+    PARTICIPANT = raw_input("\t\tEnter participant: ")
 
     while ROUND <= NUM_ROUNDS:
         print('-'*80)
@@ -81,8 +89,6 @@ if __name__ == '__main__':
 
         agent.coins.append(10)
         subject.coins.append(10)
-        if sum(subject.coop[-2:]) < -1:
-            defected = True
 
         # Entrustment phase
         if ROUND == 1:
@@ -98,8 +104,16 @@ if __name__ == '__main__':
 
         subject_entrust_coins = get_subject_entrustment()
         subject.entrust(agent, subject_entrust_coins)
+        
+        print('\t\tSAY: \"I\'m giving you ' +str(agent.trust[-1])+ ' coin(s).\"\n')        
+        print('\t\t'+'-'*45+'\n')
 
         # Cooperation phase
+        if sum(subject.coop[-2:]) < 2 and len(subject.coop) > 1:
+            defected = True
+        else:
+            defected = False
+
         if not defected:
             agent.cooperate(subject)
         else:
@@ -110,9 +124,16 @@ if __name__ == '__main__':
             subject.cooperate(agent)
         else:
             subject.defect(agent)
+
+        print('\t\tSAY: ' + ('\"I\'ll give back your coins.\"\n' if agent.coop[-1] == 1 \
+                        else '\"I\'m keeping your coins.\"\n'))        
+        print('\t\t'+'-'*45)
+
         prev_payoff = sum(agent.coins[ROUND*5-4:ROUND*5])
+        print('\n\t\tROUND ' +str(ROUND)+ ' RESULTS: ' \
+            + '\tSUBJECT: ' +str(subject.get_score()) \
+            + '\tAGENT: ' +str(agent.get_score())+ '\n')
         ROUND += 1
-        print('\n')
 
     OPPONENT_SCORE = subject.get_score()
     AGENT_SCORE = agent.get_score()

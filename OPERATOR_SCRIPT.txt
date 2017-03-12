@@ -1,0 +1,114 @@
+OPERATOR_SCRIPT.txt
+
+This is the operator script for both voice conditions. The numbers to the left of the script indicate the audio file tiles.
+
+-----------------------------------------------------------------------------
+	0 INTRODUCTION
+-----------------------------------------------------------------------------
+
+	0	Hello! My name is Rovy. I am an artificially intelligent agent sent 
+		to play a game with you today. I hope you'll have fun with this. 
+
+		I'll explain the rules to the Coin Entrustment game.
+
+		We'll play a few rounds. At the beginning of each round, we'll each get 10 coins, and we'll choose to give each other between 0 and 10 of those coins. After we exchange coins, we need to decide if we're going to give those coins back to each other. Coins that are returned will double in value. 
+
+		So, for example, if I give you 5 coins and you choose to give them back to me, I'll double my investment and get 10 coins in return. But if you decide to keep them, you gain those coins and I get nothing. 
+
+		I'm a little hard of hearing so please speak loudly and clearly. You can say "pause" at any time to pause the game.
+
+		Are you ready to play?
+
+-----------------------------------------------------------------------------
+	ROUND ONE
+-----------------------------------------------------------------------------
+
+	1			Let's begin!
+				Round 1.
+				How many coins do you want to give me?
+
+			[Participant says __ . Enter that into the cmd-line game.]
+	9.1			I'm giving you __ .
+
+
+-----------------------------------------------------------------------------
+
+	2			Now for part 2 of this round.
+				Will you return my coins?
+
+			[Participant says yes/no. Enter (y/n) into the cmd-line game. 
+			 Depending on the game's generated response, you will say either: ]
+
+	9.2	COOP			I'll give back your coins
+								or 		
+	9.2	DEFECT			I'm keeping your coins 		
+
+-----------------------------------------------------------------------------
+	ROUNDS TWO - SIX
+-----------------------------------------------------------------------------
+
+	3			Next round
+				How many coins do you want to give me?
+
+	9.1			I'm giving you __ .
+
+-----------------------------------------------------------------------------
+
+	2			Now for part 2 of this round.
+				Will you return my coins?
+
+	9.2	COOP			I'll give back your coins
+								or 		
+	9.2	DEFECT			I'm keeping your coins 		
+
+-----------------------------------------------------------------------------
+	7 ROUND SEVEN - FINAL ROUND
+-----------------------------------------------------------------------------
+
+	4			This is the final round.
+				How many coins do you want to give me?
+
+	9.1			I'm giving you __ .
+
+-----------------------------------------------------------------------------
+
+	2			Now for part 2 of this round.
+				Will you return my coins?
+
+	9.2	COOP			I'll give back your coins
+								or 		
+	9.2	DEFECT			I'm keeping your coins 		
+
+-----------------------------------------------------------------------------
+	END RESULTS
+-----------------------------------------------------------------------------
+
+	5			The game is over!
+				Your score is __ .
+	6			My score is __ .
+
+-----------------------------------------------------------------------------
+		WIN or LOSE 
+-----------------------------------------------------------------------------
+		
+	7			[YOU WIN]: Yay, I win! Good game! Goodbye!
+				---------------------------------------------------------
+	8			[YOU LOSE]: Congratulations, you win! Good game! Goodbye!
+
+				[End call]
+
+
+-----------------------------------------------------------------------------
+	EXTRAS
+-----------------------------------------------------------------------------
+		NUMBER ERROR
+-----------------------------------------------------------------------------
+		
+		I'm sorry, I didn't get that. Please say a number between 0 and 10.
+
+-----------------------------------------------------------------------------
+		YN ERROR		
+-----------------------------------------------------------------------------		
+		I'm sorry, I didn't get that. Please say YES or NO.
+
+-----------------------------------------------------------------------------		

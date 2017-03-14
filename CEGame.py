@@ -125,8 +125,10 @@ if __name__ == '__main__':
         audio_dir = os.path.join(os.getcwd(), 'Robot audio')
         coins_dir = os.path.join(os.getcwd(), 'Robot audio', 'coins')
 
+    raw_input("\t\tPress ENTER to start")
     print('\n\t\t****Play introduction audio \'0.wav\'****')
     winsound.PlaySound(os.path.join(audio_dir, '0.wav'), winsound.SND_FILENAME)
+    raw_input("\t\tPress ENTER to continue")
 
     while ROUND <= NUM_ROUNDS:
         print('-'*80)
@@ -197,12 +199,12 @@ if __name__ == '__main__':
     winner = print_scores()
     print('\n\t\t****Play end of game audio****')
     winsound.PlaySound(os.path.join(audio_dir, '5.wav'), winsound.SND_FILENAME)
-    raw_input("\t\tEnter participant score into TTS. Participant score: " + OPPONENT_SCORE \
-            + "\n\t\t Press any key to continue." )
-    winsound.PlaySound(os.path.join(audio_dir, '6.wav'), winsound.SND_FILENAME)
-    raw_input("\t\tEnter participant score into TTS. Participant score: " + OPPONENT_SCORE \
-            + "\n\t\t Press any key to continue." )
-    
+    # raw_input("\t\tEnter participant score into TTS. Participant score: " + str(OPPONENT_SCORE) \
+    #         + "\n\t\t Press any key to continue." )
+    # winsound.PlaySound(os.path.join(audio_dir, '6.wav'), winsound.SND_FILENAME)
+    # raw_input("\t\tEnter the agent score into TTS. Your score: " + str(AGENT_SCORE) \
+    #         + "\n\t\t Press any key to continue." )
+
     print('\n\t\t****If AGENT wins, play wav \'7.wav\' else play \'8.wav\'****')
     if winner == 'AGENT':
         winsound.PlaySound(os.path.join(audio_dir, '7.wav'), winsound.SND_FILENAME)

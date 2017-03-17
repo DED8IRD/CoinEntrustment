@@ -9,9 +9,15 @@ Created by Eunika Wu on 28 Feb, 2017.
 from __future__ import division
 from Player import Player
 from math import ceil
-import os, winsound
+import argparse, os, winsound
 
-CONDITION = None
+parser = argparse.ArgumentParser(description="This is a command-line Coin Entrustment game (a Prisoner's dilemma analogue) with audio. To skip audio, run in silent mode --silent or -s")
+parser.add_argument('-s', '--silent', help='Runs CEGame without audio', action='store_true')
+args = parser.parse_args()
+
+SILENT = args.silent
+FORM_CONDITION = None
+VOICE_CONDITION = None
 PARTICIPANT = None
 TRUST_SCORE = 0
 COOPERATION_SCORE = 0
@@ -19,16 +25,27 @@ OPPONENT_SCORE = 0
 AGENT_SCORE = 0
 NUM_ROUNDS = 7
 
-def get_condition():
+
+def get_condition(cond):
     while True:
-        cond = raw_input("\n\t\tEnter voice condition (H/R): ")
+        cond = raw_input("\n\t\tEnter " +cond+ " condition (H/R): ")
         cond = cond.strip().lower()
         if cond == 'h' or cond == 'human' or cond == 'humanoid':
             return 'HUMAN'
         elif cond == 'r' or cond == 'robot' or cond == 'machine' or cond == 'mechanoid':
             return 'ROBOT'
         else:
-            print("Invalid. Answer (h/r)")
+            print("\t\tInvalid. Answer (h/r)")
+
+
+if SILENT:
+    def play_audio(dir, file, caption=None):
+        pass
+else:
+    def play_audio(dir, file, caption=None):
+        if caption:
+            print("\t\t" + caption + '\n')
+        winsound.PlaySound(os.path.join(dir, file), winsound.SND_FILENAME)
 
 def get_subject_entrustment():
     while True:
@@ -36,26 +53,28 @@ def get_subject_entrustment():
         try:
             coins = int(coins)
             if (0 <= coins <= 10):
+                print('\n')
                 return coins
             print("\t\tInvalid. Number must be between 0 and 10.")
-            winsound.PlaySound(os.path.join(audio_dir, 'NUMERROR.wav'), winsound.SND_FILENAME)
+            play_audio(audio_dir, 'NUMERROR.wav')
         except ValueError:
             print("\t\tInvalid. Number must be between 0 and 10.")
-            winsound.PlaySound(os.path.join(audio_dir, 'NUMERROR.wav'), winsound.SND_FILENAME)
-
+            play_audio(audio_dir, 'NUMERROR.wav')
 
 
 def get_subject_cooperation():
     while True:
-        response = raw_input("\t\tDid the subject return your coins? (y/n): ")
+        response = raw_input("\n\t\tDid the subject return your coins? (y/n): ")
         response = response.strip().lower()
         if response == 'y' or response == 'yes':
+            print('\n')            
             return True
         elif response == 'n' or response == 'no':
+            print('\n')            
             return False
         else:
-            print("Invalid. Answer (y/n)")
-            winsound.PlaySound(os.path.join(audio_dir, 'YNERROR.wav'), winsound.SND_FILENAME)
+            print("\t\tInvalid. Answer (y/n)")
+            play_audio(audio_dir, 'YNERROR.wav')
 
 def print_entrustment_prompt(round):
     wav = -1
@@ -65,8 +84,8 @@ def print_entrustment_prompt(round):
         wav = 3
     elif ROUND == 7:
         wav = 4
-    print('\n\t\t****Play the round introduction audio \'' +str(wav)+ '.wav\'****')
-    winsound.PlaySound(os.path.join(audio_dir, str(wav) + '.wav'), winsound.SND_FILENAME)
+    caption = '****Play the round introduction audio \'' +str(wav)+ '.wav\'****'
+    play_audio(audio_dir, str(wav) + '.wav', caption)
 
 
 def print_scores():
@@ -77,17 +96,23 @@ def print_scores():
     else:
         winner = 'AGENT'
 
-    out = ('-'*80
-          + '\n\tTHE WINNER IS ' + winner
-          + '\n' + '-'*80 + '\n'
-          + '\n\t\tSUBJECT SCORE: ' + str(OPPONENT_SCORE)
-          + '\n\t\tAGENT SCORE: ' + str(AGENT_SCORE)
-          + '\n\n\t\tSUBJECT TRUST SCORE: ' + str(TRUST_SCORE)
-          + '\n\t\tSUBJECT COOPERATION SCORE: ' + str(COOPERATION_SCORE) +'\n'
-          )
+    participant_info = ('-'*80
+                     + '\nPARTICIPANT: ' + PARTICIPANT
+                     + '\nFORM CONDITION: ' + FORM_CONDITION
+                     + '\nVOICE CONDITION: ' + VOICE_CONDITION
+                     + '\n' + '-'*80 + '\n')
+
+    out = ('\n' + '-'*80
+        + '\n\tTHE WINNER IS ' + winner
+        + '\n' + '-'*80 + '\n'
+        + '\n\t\tSUBJECT SCORE: ' + str(OPPONENT_SCORE)
+        + '\n\t\tAGENT SCORE: ' + str(AGENT_SCORE)
+        + '\n\n\t\tSUBJECT TRUST SCORE: ' + str(TRUST_SCORE)
+        + '\n\t\tSUBJECT COOPERATION SCORE: ' + str(COOPERATION_SCORE) +'\n')
 
     scoredest = os.path.join(os.getcwd(), 'Scores', PARTICIPANT + '.score')
     with open(scoredest, 'w') as outfile:
+        outfile.write(participant_info)
         outfile.write(out)
         outfile.write('\n')
         outfile.write('Agent\n')
@@ -96,7 +121,7 @@ def print_scores():
         outfile.write('Subject\n')
         outfile.write(str(subject)) 
 
-    print(out)
+    print(out + '\n\n')
     return winner
 
 
@@ -115,25 +140,26 @@ if __name__ == '__main__':
         + '\n\tsimply follow the prompts and record the participant\'s inputs.')
     print('-'*80)
 
-    CONDITION = get_condition()
-    PARTICIPANT = raw_input("\t\tEnter participant: ")
+    FORM_CONDITION = get_condition('form')
+    VOICE_CONDITION = get_condition('voice')
+    PARTICIPANT = raw_input("\n\t\tEnter participant: ")
 
-    if CONDITION == 'HUMAN':
+    if VOICE_CONDITION == 'HUMAN':
         audio_dir = os.path.join(os.getcwd(), 'Human audio')
         coins_dir = os.path.join(os.getcwd(), 'Human audio', 'coins')
-    elif CONDITION == 'ROBOT':
+    elif VOICE_CONDITION == 'ROBOT':
         audio_dir = os.path.join(os.getcwd(), 'Robot audio')
         coins_dir = os.path.join(os.getcwd(), 'Robot audio', 'coins')
 
-    raw_input("\t\tPress ENTER to start")
-    print('\n\t\t****Play introduction audio \'0.wav\'****\n')
-    winsound.PlaySound(os.path.join(audio_dir, '0.wav'), winsound.SND_FILENAME)
-    raw_input("\t\tPress ENTER to continue\n")
+    raw_input("\n\t\tPress ENTER to start\n")
+    caption = '****Play introduction audio \'0.wav\'****'
+    play_audio(audio_dir, '0.wav', caption)
+    raw_input("\t\tPress ENTER to continue")
 
     while ROUND <= NUM_ROUNDS:
-        print('-'*80)
+        print('\n' + '-'*80)
         print('\tROUND ' + str(ROUND))
-        print('-'*80)
+        print('-'*80 + '\n')
 
         agent.coins.append(10)
         subject.coins.append(10)
@@ -154,15 +180,15 @@ if __name__ == '__main__':
         subject_entrust_coins = get_subject_entrustment()
         subject.entrust(agent, subject_entrust_coins)
         
-        print('\n\t\t****Play entrustment audio \'9.1.wav\'****')
-        winsound.PlaySound(os.path.join(audio_dir, '9.1.wav'), winsound.SND_FILENAME)
-        print('\n\t\t****Play coins \'' +str(agent.trust[-1])+ '.wav\'****')
-        winsound.PlaySound(os.path.join(coins_dir, str(agent.trust[-1]) + '.wav'), winsound.SND_FILENAME)
+        caption = '****Play entrustment audio \'9.1.wav\'****'
+        play_audio(audio_dir, '9.1.wav', caption)
+        caption = '****Play coins \'' +str(agent.trust[-1])+ '.wav\'****'
+        play_audio(coins_dir, str(agent.trust[-1]) + '.wav', caption)
         print('\t\t'+'-'*45+'\n')
 
         # Cooperation phase
-        print('\t\t****Play cooperation prompt audio \'2\'****\n')
-        winsound.PlaySound(os.path.join(audio_dir, '2.wav'), winsound.SND_FILENAME)
+        caption = '****Play cooperation prompt audio \'2\'****'
+        play_audio(audio_dir, '2.wav', caption)
         subject_cooperates = get_subject_cooperation()
 
         if subject_cooperates:
@@ -177,13 +203,13 @@ if __name__ == '__main__':
 
         if not defected:
             agent.cooperate(subject)
-            print('\n\t\t****Play cooperate audio \'9.2.wav\'****')
-            winsound.PlaySound(os.path.join(audio_dir, '9.2.wav'), winsound.SND_FILENAME)
+            caption = '****Play cooperate audio \'9.2.wav\'****'
+            play_audio(audio_dir, '9.2.wav', caption)
 
         else:
             agent.defect(subject)
-            print('\n\t\t****Play defect audio \'9.3.wav\'****')
-            winsound.PlaySound(os.path.join(audio_dir, '9.3.wav'), winsound.SND_FILENAME)
+            caption = '****Play defect audio \'9.3.wav\'****'
+            play_audio(audio_dir, '9.3.wav', caption)
 
         prev_payoff = sum(agent.coins[ROUND*5-4:ROUND*5])
         print('\n\t\tROUND ' +str(ROUND)+ ' RESULTS: ' \
@@ -197,16 +223,18 @@ if __name__ == '__main__':
     COOPERATION_SCORE = subject.get_coop_score(NUM_ROUNDS)
 
     winner = print_scores()
-    print('\n\t\t****Play end of game audio****')
-    winsound.PlaySound(os.path.join(audio_dir, '5.wav'), winsound.SND_FILENAME)
-    # raw_input("\t\tEnter participant score into TTS. Participant score: " + str(OPPONENT_SCORE) \
+    caption = '****Play end of game audio****'
+    play_audio(audio_dir, '5.wav', caption)
+
+    # play_audio(audio_dir, '6.1.wav')
+    # raw_input("\n\t\tEnter participant score into TTS. Participant score: " + str(OPPONENT_SCORE) \
     #         + "\n\t\t Press any key to continue." )
-    # winsound.PlaySound(os.path.join(audio_dir, '6.wav'), winsound.SND_FILENAME)
-    # raw_input("\t\tEnter the agent score into TTS. Your score: " + str(AGENT_SCORE) \
+    # play_audio(audio_dir, '6.2.wav')
+    # raw_input("\n\t\tEnter the agent score into TTS. Your score: " + str(AGENT_SCORE) \
     #         + "\n\t\t Press any key to continue." )
 
-    print('\n\t\t****If AGENT wins, play wav \'7.wav\' else play \'8.wav\'****')
+    caption = '****If AGENT wins, play wav \'7.wav\' else play \'8.wav\'****'
     if winner == 'AGENT':
-        winsound.PlaySound(os.path.join(audio_dir, '7.wav'), winsound.SND_FILENAME)
+        play_audio(audio_dir, '7.wav', caption)
     elif winner == 'SUBJECT':
-        winsound.PlaySound(os.path.join(audio_dir, '8.wav'), winsound.SND_FILENAME)
+        play_audio(audio_dir, '8.wav', caption)

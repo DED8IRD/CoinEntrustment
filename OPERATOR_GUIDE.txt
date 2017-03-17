@@ -8,4 +8,4 @@ The researcher should have the game up and ready for you. If that is not the cas
 	cd C:/Users/Rory/Documents/HRI Research Project/CE Game
 	python CEGame.py
 
-To "play" the command-line game, simply follow the prompts and play the recordings specified. You will enter participant inputs and the game will calculate your next moves. All you have to do is play the right recordings.
+To "play" the command-line game, simply follow the prompts. You will enter participant inputs and the game will calculate your next moves. All you have to do is record the partipant moves when prompted.

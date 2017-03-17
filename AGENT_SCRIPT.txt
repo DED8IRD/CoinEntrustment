@@ -1,6 +1,6 @@
-OPERATOR_SCRIPT.txt
+AGENT_SCRIPT.txt
 
-This is the operator script for both voice conditions. The numbers to the left of the script indicate the audio file tiles.
+This is the agent script for both voice conditions. The numbers to the left of the script indicate the audio file tiles.
 
 -----------------------------------------------------------------------------
 	0 INTRODUCTION

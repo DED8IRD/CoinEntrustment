@@ -126,9 +126,9 @@ if __name__ == '__main__':
         coins_dir = os.path.join(os.getcwd(), 'Robot audio', 'coins')
 
     raw_input("\t\tPress ENTER to start")
-    print('\n\t\t****Play introduction audio \'0.wav\'****')
+    print('\n\t\t****Play introduction audio \'0.wav\'****\n')
     winsound.PlaySound(os.path.join(audio_dir, '0.wav'), winsound.SND_FILENAME)
-    raw_input("\t\tPress ENTER to continue")
+    raw_input("\t\tPress ENTER to continue\n")
 
     while ROUND <= NUM_ROUNDS:
         print('-'*80)
@@ -161,7 +161,7 @@ if __name__ == '__main__':
         print('\t\t'+'-'*45+'\n')
 
         # Cooperation phase
-        print('\n\t\t****Play cooperation prompt audio \'2\'****')
+        print('\t\t****Play cooperation prompt audio \'2\'****\n')
         winsound.PlaySound(os.path.join(audio_dir, '2.wav'), winsound.SND_FILENAME)
         subject_cooperates = get_subject_cooperation()
 
